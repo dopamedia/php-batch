@@ -1,0 +1,23 @@
+{
+    "name": "dopamedia/php-batch",
+    "description": "N/A",
+    "type": "library",
+    "license": "GPL-3.0",
+    "authors": [
+        {
+            "name": "Andreas Penz",
+            "email": "andreas@dopa.media"
+        }
+    ],
+    "require": {
+        "php": "^7.1",
+        "phpunit/phpunit": "~6.2.0",
+        "myclabs/php-enum": "^1.5",
+        "symfony/console": "~2.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Dopamedia\\PhpBatch\\": "src/"
+        }
+    }
+}

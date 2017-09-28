@@ -13,10 +13,9 @@ namespace Dopamedia\PhpBatch;
 interface JobInterface
 {
     /**
-     * @param string $name
-     * @return mixed
+     * @return string
      */
-    public function getName(string $name);
+    public function getName(): string;
 
     /**
      * @param JobExecutionInterface $execution

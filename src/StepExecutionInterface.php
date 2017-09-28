@@ -15,6 +15,28 @@ use Dopamedia\PhpBatch\Item\ExecutionContext;
 interface StepExecutionInterface extends EntityInterface
 {
     /**
+     * @return null|string
+     */
+    public function getStepName(): ?string;
+
+    /**
+     * @param string $name
+     * @return StepExecutionInterface
+     */
+    public function setStepName(string $stepName): StepExecutionInterface;
+
+    /**
+     * @return JobExecutionInterface|null
+     */
+    public function getJobExecution(): ?JobExecutionInterface;
+
+    /**
+     * @param JobExecutionInterface $jobExecution
+     * @return StepExecutionInterface
+     */
+    public function setJobExecution(JobExecutionInterface $jobExecution): StepExecutionInterface;
+
+    /**
      * @return ExecutionContext
      */
     public function getExecutionContext(): ExecutionContext;
@@ -26,59 +48,59 @@ interface StepExecutionInterface extends EntityInterface
     public function setExecutionContext(ExecutionContext $executionContext): StepExecutionInterface;
 
     /**
-     * @return \DateTime
+     * @return \DateTime|null
      */
-    public function getEndTime(): \DateTime;
+    public function getEndTime(): ?\DateTime;
 
     /**
      * @param \DateTime $endTime
-     * @return void
+     * @return StepExecutionInterface
      */
-    public function setEndTime(\DateTime $endTime): void;
+    public function setEndTime(\DateTime $endTime): StepExecutionInterface;
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getReadCount(): int;
+    public function getReadCount(): ?int;
 
     /**
      * @param int $readCount
-     * @return void
+     * @return StepExecutionInterface
      */
-    public function setReadCount(int $readCount): void;
+    public function setReadCount(int $readCount): StepExecutionInterface;
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getWriteCount(): int;
+    public function getWriteCount(): ?int;
 
     /**
      * @param int $writeCount
-     * @return void
+     * @return StepExecutionInterface
      */
-    public function setWriteCount(int $writeCount): void;
+    public function setWriteCount(int $writeCount): StepExecutionInterface;
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getFilterCount(): int;
+    public function getFilterCount(): ?int;
 
     /**
      * @param int $filterCount
-     * @return void
+     * @return StepExecutionInterface
      */
-    public function setFilterCount(int $filterCount): void;
+    public function setFilterCount(int $filterCount): StepExecutionInterface;
 
     /**
-     * @return \DateTime
+     * @return \DateTime|null
      */
-    public function getStartTime(): \DateTime;
+    public function getStartTime(): ?\DateTime;
 
     /**
      * @param \DateTime $startTime
-     * @return void
+     * @return StepExecutionInterface
      */
-    public function setStartTime(\DateTime $startTime): void;
+    public function setStartTime(\DateTime $startTime): StepExecutionInterface;
 
     /**
      * @return BatchStatus
@@ -87,26 +109,21 @@ interface StepExecutionInterface extends EntityInterface
 
     /**
      * @param BatchStatus $batchStatus
-     * @return void
+     * @return StepExecutionInterface
      */
-    public function setStatus(BatchStatus $batchStatus): void;
+    public function setStatus(BatchStatus $batchStatus): StepExecutionInterface;
 
     /**
      * @param BatchStatus $batchStatus
-     * @return void
+     * @return StepExecutionInterface
      */
-    public function upgradeStatus(BatchStatus $batchStatus): void;
-
-    /**
-     * @return string
-     */
-    public function getStepName(): string;
+    public function upgradeStatus(BatchStatus $batchStatus): StepExecutionInterface;
 
     /**
      * @param ExitStatus $exitStatus
-     * @return void
+     * @return StepExecutionInterface
      */
-    public function setExitStatus(ExitStatus $exitStatus): void;
+    public function setExitStatus(ExitStatus $exitStatus): StepExecutionInterface;
 
     /**
      * @return ExitStatus
@@ -114,73 +131,19 @@ interface StepExecutionInterface extends EntityInterface
     public function getExitStatus(): ExitStatus;
 
     /**
-     * @return JobExecutionInterface
-     */
-    public function getJobExecution(): JobExecutionInterface;
-
-    /**
      * @return int
      */
     public function isTerminateOnly(): int;
 
     /**
-     * @return void
+     * @return StepExecutionInterface
      */
-    public function setTerminateOnly(): void;
-
-    /**
-     * @return int
-     */
-    public function getSkipCount(): int;
+    public function setTerminateOnly(): StepExecutionInterface;
 
     /**
      * @return JobParameters
      */
     public function getJobParameters(): JobParameters;
-
-    /**
-     * @return int
-     */
-    public function getReadSkipCount(): int;
-
-    /**
-     * @param int $readSkipCount
-     * @return void
-     */
-    public function setReadSkipCount(int $readSkipCount): void;
-
-    /**
-     * @return int
-     */
-    public function getWriteSkipCount(): int;
-
-    /**
-     * @param int $writeSkipCount
-     * @return void
-     */
-    public function setWriteSkipCount(int $writeSkipCount): void;
-
-    /**
-     * @return int
-     */
-    public function getProcessSkipCount(): int;
-
-    /**
-     * @param int $processSkipCount
-     * @return void
-     */
-    public function setProcessSkipCount(int $processSkipCount): void;
-
-    /**
-     * @return \DateTime
-     */
-    public function getLastUpdated(): \DateTime;
-
-    /**
-     * @param \DateTime $lastUpdated
-     * @return void
-     */
-    public function setLastUpdated(\DateTime $lastUpdated): void;
 
     /**
      * @return array|\Throwable[]
@@ -189,7 +152,7 @@ interface StepExecutionInterface extends EntityInterface
 
     /**
      * @param \Throwable $throwable
-     * @return void
+     * @return StepExecutionInterface
      */
-    public function addFailureException(\Throwable $throwable): void;
+    public function addFailureException(\Throwable $throwable): StepExecutionInterface;
 }

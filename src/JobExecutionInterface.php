@@ -15,25 +15,26 @@ use Dopamedia\PhpBatch\Item\ExecutionContext;
 interface JobExecutionInterface extends EntityInterface
 {
     /**
-     * @return JobParameters
+     * @return JobParameters|null
      */
-    public function getJobParameters(): JobParameters;
+    public function getJobParameters(): ?JobParameters;
 
     /**
      * @param JobParameters $jobParameters
-     * @return void
+     * @return JobExecutionInterface
      */
-    public function setJobParameters(JobParameters $jobParameters): void;
+    public function setJobParameters(JobParameters $jobParameters): JobExecutionInterface;
 
     /**
-     * @return JobInstanceInterface
+     * @return JobInstanceInterface|null
      */
-    public function getJobInstance(): JobInstanceInterface;
+    public function getJobInstance(): ?JobInstanceInterface;
 
     /**
      * @param JobInstanceInterface $jobInstance
+     * @return JobExecutionInterface
      */
-    public function setJobInstance(JobInstanceInterface $jobInstance): void;
+    public function setJobInstance(JobInstanceInterface $jobInstance): JobExecutionInterface;
 
     /**
      * @return StepExecutionInterface|array
@@ -48,9 +49,9 @@ interface JobExecutionInterface extends EntityInterface
 
     /**
      * @param StepExecutionInterface $stepExecution
-     * @return void
+     * @return StepExecutionInterface
      */
-    public function addStepExecution(StepExecutionInterface $stepExecution): void;
+    public function addStepExecution(StepExecutionInterface $stepExecution): JobExecutionInterface;
 
     /**
      * @return BatchStatus
@@ -59,15 +60,15 @@ interface JobExecutionInterface extends EntityInterface
 
     /**
      * @param BatchStatus $status
-     * @return void
+     * @return JobExecutionInterface
      */
-    public function setStatus(BatchStatus $status): void;
+    public function setStatus(BatchStatus $status): JobExecutionInterface;
 
     /**
      * @param BatchStatus $status
-     * @return void
+     * @return JobExecutionInterface
      */
-    public function upgradeStatus(BatchStatus $status): void;
+    public function upgradeStatus(BatchStatus $status): JobExecutionInterface;
 
     /**
      * @return \DateTime
@@ -76,9 +77,9 @@ interface JobExecutionInterface extends EntityInterface
 
     /**
      * @param \DateTime $startTime
-     * @return void
+     * @return JobExecutionInterface
      */
-    public function setStartTime(\DateTime $startTime): void;
+    public function setStartTime(\DateTime $startTime): JobExecutionInterface;
 
     /**
      * @return \DateTime
@@ -87,9 +88,9 @@ interface JobExecutionInterface extends EntityInterface
 
     /**
      * @param \DateTime $createTime
-     * @return void
+     * @return JobExecutionInterface
      */
-    public function setCreateTime(\DateTime $createTime): void;
+    public function setCreateTime(\DateTime $createTime): JobExecutionInterface;
 
     /**
      * @return \DateTime
@@ -98,20 +99,19 @@ interface JobExecutionInterface extends EntityInterface
 
     /**
      * @param \DateTime $endTime
-     * @return void
+     * @return JobExecutionInterface
      */
-    public function setEndTime(\DateTime $endTime): void;
+    public function setEndTime(\DateTime $endTime): JobExecutionInterface;
 
     /**
-     * @return \DateTime
+     * @return null|string
      */
-    public function getLastUpdated(): \DateTime;
+    public function getExitCode(): ?string;
 
     /**
-     * @param \DateTime $lastUpdated
-     * @return void
+     * @return null|string
      */
-    public function setLastUpdated(\DateTime $lastUpdated): void;
+    public function getExitDescription(): ?string;
 
     /**
      * @return ExitStatus
@@ -120,9 +120,9 @@ interface JobExecutionInterface extends EntityInterface
 
     /**
      * @param ExitStatus $exitStatus
-     * @return void
+     * @return JobExecutionInterface
      */
-    public function setExitStatus(ExitStatus $exitStatus): void;
+    public function setExitStatus(ExitStatus $exitStatus): JobExecutionInterface;
 
     /**
      * @return ExecutionContext
@@ -131,9 +131,9 @@ interface JobExecutionInterface extends EntityInterface
 
     /**
      * @param ExecutionContext $executionContext
-     * @return void
+     * @return JobExecutionInterface
      */
-    public function setExecutionContext(ExecutionContext $executionContext): void;
+    public function setExecutionContext(ExecutionContext $executionContext): JobExecutionInterface;
 
     /**
      * @return array
@@ -142,9 +142,9 @@ interface JobExecutionInterface extends EntityInterface
 
     /**
      * @param \Throwable $e
-     * @return void
+     * @return JobExecutionInterface
      */
-    public function addFailureException(\Throwable $e): void;
+    public function addFailureException(\Throwable $e): JobExecutionInterface;
 
     /**
      * @return array

@@ -13,52 +13,52 @@ namespace Dopamedia\PhpBatch;
 interface JobInstanceInterface extends EntityInterface
 {
     /**
-     * @return string
+     * @return null|string
      */
-    public function getCode(): string;
+    public function getCode(): ?string;
 
     /**
      * @param string $code
-     * @return void
+     * @return JobInstanceInterface
      */
-    public function setCode(string $code): void;
+    public function setCode(string $code): JobInstanceInterface;
 
     /**
-     * @return BatchStatus
+     * @return null|string
      */
-    public function getStatus(): BatchStatus;
+    public function getJobName(): ?string;
 
     /**
-     * @param BatchStatus $status
-     * @return void
+     * @param string $jobName
+     * @return JobInstanceInterface
      */
-    public function setStatus(BatchStatus $status): void;
+    public function setJobName(string $jobName): JobInstanceInterface;
 
     /**
-     * @return JobExecutionInterface
+     * @return array
      */
-    public function getJobExecution(): JobExecutionInterface;
+    public function getRawParameters(): array;
+
+    /**
+     * @param array $rawParameters
+     * @return JobInstanceInterface
+     */
+    public function setRawParameters(array $rawParameters): JobInstanceInterface;
+
+    /**
+     * @return JobExecutionInterface[]|array
+     */
+    public function getJobExecutions(): array;
 
     /**
      * @param JobExecutionInterface $jobExecution
-     * @return void
+     * @return JobInstanceInterface
      */
-    public function addJobExecution(JobExecutionInterface $jobExecution): void;
+    public function addJobExecution(JobExecutionInterface $jobExecution): JobInstanceInterface;
 
     /**
      * @param JobExecutionInterface $jobExecution
-     * @return void
+     * @return JobInstanceInterface
      */
-    public function removeJobExecution(JobExecutionInterface $jobExecution): void;
-
-    /**
-     * @return string
-     */
-    public function getName(): string;
-
-    /**
-     * @param string $name
-     * @return void
-     */
-    public function setName(string $name): void;
+    public function removeJobExecution(JobExecutionInterface $jobExecution): JobInstanceInterface;
 }

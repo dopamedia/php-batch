@@ -15,12 +15,12 @@ interface EntityInterface
     /**
      * @return int|null
      */
-    public function getId(): ?int;
+    public function getId();
 
     /**
      * @param int $id
      * @return EntityInterface
      */
-    public function setId($id): EntityInterface;
+    public function setId($id);
 
 }

@@ -7,6 +7,7 @@
 namespace Dopamedia\PhpBatch;
 
 use Dopamedia\PhpBatch\Item\ExecutionContext;
+use Dopamedia\PhpBatch\Job\JobParameters;
 
 /**
  * Interface StepExecutionInterface

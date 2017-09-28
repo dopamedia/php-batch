@@ -7,7 +7,7 @@
 namespace Dopamedia\PhpBatch\Job;
 
 use Dopamedia\PhpBatch\JobInterface;
-use Dopamedia\PhpBatch\UndefinedJobException;
+use Dopamedia\PhpBatch\Job\UndefinedJobException;
 
 /**
  * Interface JobRegistryInterface

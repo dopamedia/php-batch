@@ -8,7 +8,7 @@ namespace Dopamedia\PhpBatch\Repository;
 
 use Dopamedia\PhpBatch\JobExecutionInterface;
 use Dopamedia\PhpBatch\JobInstanceInterface;
-use Dopamedia\PhpBatch\JobParameters;
+use Dopamedia\PhpBatch\Job\JobParameters;
 use Dopamedia\PhpBatch\StepExecutionInterface;
 
 /**

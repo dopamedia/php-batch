@@ -7,9 +7,9 @@
 namespace Dopamedia\PhpBatch\Job;
 
 /**
- * Class UndefinedJobException
+ * Class UndefinedJobParameterException
  * @package Dopamedia\PhpBatch\Job
  */
-class UndefinedJobException extends \DomainException
+class UndefinedJobParameterException extends \DomainException
 {
 }

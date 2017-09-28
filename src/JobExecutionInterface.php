@@ -37,7 +37,7 @@ interface JobExecutionInterface extends EntityInterface
     public function setJobInstance(JobInstanceInterface $jobInstance): JobExecutionInterface;
 
     /**
-     * @return StepExecutionInterface|array
+     * @return StepExecutionInterface[]|array
      */
     public function getStepExecutions(): array;
 

@@ -132,9 +132,9 @@ interface StepExecutionInterface extends EntityInterface
     public function getExitStatus(): ExitStatus;
 
     /**
-     * @return int
+     * @return bool
      */
-    public function isTerminateOnly(): int;
+    public function isTerminateOnly(): bool;
 
     /**
      * @return StepExecutionInterface

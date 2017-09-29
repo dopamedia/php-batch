@@ -10,6 +10,7 @@ use Dopamedia\PhpBatch\JobExecutionInterface;
 use Dopamedia\PhpBatch\JobInstanceInterface;
 use Dopamedia\PhpBatch\Job\JobParameters;
 use Dopamedia\PhpBatch\StepExecutionInterface;
+use Dopamedia\PhpBatch\WarningInterface;
 
 /**
  * Interface JobRepositoryInterface
@@ -18,11 +19,11 @@ use Dopamedia\PhpBatch\StepExecutionInterface;
 interface JobRepositoryInterface
 {
     /**
-     * @param JobInstanceInterface $job
+     * @param JobInstanceInterface $jobInstance
      * @param JobParameters $jobParameters
      * @return JobExecutionInterface
      */
-    public function createJobExecution(JobInstanceInterface $job, JobParameters $jobParameters): JobExecutionInterface;
+    public function createJobExecution(JobInstanceInterface $jobInstance, JobParameters $jobParameters): JobExecutionInterface;
 
     /**
      * @param JobExecutionInterface $jobExecution
@@ -37,23 +38,16 @@ interface JobRepositoryInterface
     public function updateStepExecution(StepExecutionInterface $stepExecution): void;
 
     /**
-     * @param JobInstanceInterface $jobInstance
-     * @param string $stepName
-     * @return StepExecutionInterface
-     */
-    public function getLastStepExecution(JobInstanceInterface $jobInstance, string $stepName): StepExecutionInterface;
-
-    /**
      * @param StepExecutionInterface $stepExecution
      * @param string $reason
      * @param array $reasonParameters
      * @param array $item
-     * @return void
+     * @return WarningInterface
      */
     public function createWarning(
         StepExecutionInterface $stepExecution,
         string $reason,
         array $reasonParameters = [],
         array $item = []
-    ): void;
+    ): WarningInterface;
 }

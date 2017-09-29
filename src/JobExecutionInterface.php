@@ -38,6 +38,17 @@ interface JobExecutionInterface extends EntityInterface
     public function setJobInstance(JobInstanceInterface $jobInstance): JobExecutionInterface;
 
     /**
+     * @return int|null
+     */
+    public function getPid(): ?int;
+
+    /**
+     * @param int $pid
+     * @return JobExecutionInterface
+     */
+    public function setPid(int $pid): JobExecutionInterface;
+
+    /**
      * @return StepExecutionInterface[]|array
      */
     public function getStepExecutions(): array;

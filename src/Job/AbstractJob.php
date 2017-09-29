@@ -6,7 +6,10 @@
 
 namespace Dopamedia\PhpBatch\Job;
 
+use Dopamedia\PhpBatch\Adapter\EventManagerAdapterInterface;
 use Dopamedia\PhpBatch\BatchStatus;
+use Dopamedia\PhpBatch\Event\EventInterface;
+use Dopamedia\PhpBatch\Event\JobExecutionEvent;
 use Dopamedia\PhpBatch\ExitStatus;
 use Dopamedia\PhpBatch\JobExecutionException;
 use Dopamedia\PhpBatch\JobExecutionInterface;
@@ -30,22 +33,30 @@ abstract class AbstractJob implements JobInterface
     private $name;
 
     /**
+     * @var EventManagerAdapterInterface
+     */
+    private $eventManagerAdapter;
+
+    /**
      * @var JobRepositoryInterface
      */
-    private $jobRepository;
+    protected $jobRepository;
 
     /**
      * AbstractJob constructor.
      * @param string $name
+     * @param EventManagerAdapterInterface $eventManagerAdapter
      * @param JobRepositoryInterface $jobRepository
      */
     public function __construct(
         string $name,
+        EventManagerAdapterInterface $eventManagerAdapter,
         JobRepositoryInterface $jobRepository
     )
     {
         $this->name = $name;
         $this->jobRepository = $jobRepository;
+        $this->eventManagerAdapter = $eventManagerAdapter;
     }
 
     /**
@@ -61,49 +72,45 @@ abstract class AbstractJob implements JobInterface
      */
     public function execute(JobExecutionInterface $execution): void
     {
-        // TODO::log
-
         try {
-            // TODO::validate the job parameters
+            $this->attachJobExecutionEvent(EventInterface::BEFORE_JOB_EXECUTION, $execution);
 
             if ($execution->getStatus()->getValue() !== BatchStatus::STOPPING) {
                 $execution->setStartTime(new \DateTime());
                 $this->updateStatus($execution, BatchStatus::STARTED());
-
-                // TODO::attach event
-
+                $this->jobRepository->updateJobExecution($execution);
                 $this->doExecute($execution);
             } else {
                 $execution->setStatus(BatchStatus::STOPPED());
                 $execution->setExitStatus(new ExitStatus(ExitStatus::COMPLETED));
+                $this->jobRepository->updateJobExecution($execution);
+                $this->attachJobExecutionEvent(EventInterface::JOB_EXECUTION_STOPPED, $execution);
             }
 
+            if ($execution->getStatus()->isLessThanOrEqualTo(BatchStatus::STOPPED())
+                && (count($execution->getStepExecutions()) === 0)
+            ) {
+                $exitStatus = $execution->getExitStatus();
+                $noopExitStatus = new ExitStatus(ExitStatus::NOOP);
+                $noopExitStatus->addExitDescription("All steps already completed or no steps configured for this job.");
+                $execution->setExitStatus($exitStatus->logicalAnd($noopExitStatus));
+                $this->jobRepository->updateJobExecution($execution);
+            }
+
+            $this->attachJobExecutionEvent(EventInterface::AFTER_JOB_EXECUTION, $execution);
+            $execution->setEndTime(new \DateTime());
+            $this->jobRepository->updateJobExecution($execution);
         } catch (JobInterruptedException $e) {
-            // TODO::log
             $execution->setExitStatus($this->getDefaultExitStatusForFailure($e));
             $execution->setStatus(BatchStatus::max(BatchStatus::STOPPED(), $e->getStatus()));
             $execution->addFailureException($e);
+            $this->jobRepository->updateJobExecution($execution);
         } catch (\Throwable $t) {
-            // TODO::log
             $execution->setExitStatus($this->getDefaultExitStatusForFailure($t));
             $execution->setStatus(BatchStatus::FAILED());
             $execution->addFailureException($t);
-        } finally {
-            if (
-                $execution->getStatus()->isLessThanOrEqualTo(BatchStatus::STOPPED())
-                && empty($execution->getStepExecutions())
-            ) {
-                $exitStatus = $execution->getExitStatus();
-                $newExitStatus = new ExitStatus(ExitStatus::NOOP);
-                $newExitStatus->addExitDescription('All steps already completed or no steps configured for this job.');
-                $execution->setExitStatus($exitStatus->logicalAnd($newExitStatus));
-            }
-
-            $execution->setEndTime(new \DateTime());
-
-            // TODO::attach event
-
             $this->jobRepository->updateJobExecution($execution);
+            $this->attachJobExecutionEvent(EventInterface::JOB_EXECUTION_FATAL_ERROR, $execution);
         }
     }
 
@@ -154,6 +161,19 @@ abstract class AbstractJob implements JobInterface
         }
 
         return $stepExecution;
+    }
+
+    /**
+     * @param string $eventName
+     * @param JobExecutionInterface $jobExecution
+     * @return void
+     */
+    protected function attachJobExecutionEvent(string $eventName, JobExecutionInterface $jobExecution): void
+    {
+        $event = new JobExecutionEvent($jobExecution);
+        $this->eventManagerAdapter->attach($eventName, function() use ($event) {
+            return $event;
+        });
     }
 
     /**

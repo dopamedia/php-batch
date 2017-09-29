@@ -6,9 +6,8 @@
 
 namespace Dopamedia\PhpBatch\Job;
 
-
 use Dopamedia\PhpBatch\Repository\JobRepositoryInterface;
-use Dopamedia\PhpBatch\Step\StepLocatorInterface;
+use Dopamedia\PhpBatch\Adapter\EventManagerAdapterInterface;
 use Dopamedia\PhpBatch\StepInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -20,14 +19,20 @@ class SimpleJobTest extends TestCase
      */
     protected $jobRepositoryMock;
 
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject|EventManagerAdapterInterface
+     */
+    protected $eventManagerAdapterMock;
+
     protected function setUp()
     {
         $this->jobRepositoryMock = $this->createMock(JobRepositoryInterface::class);
+        $this->eventManagerAdapterMock = $this->createMock(EventManagerAdapterInterface::class);
     }
 
     public function testGetStepNames()
     {
-        $simpleJob = new SimpleJob('', $this->jobRepositoryMock);
+        $simpleJob = new SimpleJob('', $this->eventManagerAdapterMock, $this->jobRepositoryMock);
         $this->assertEmpty($simpleJob->getStepNames());
 
         /** @var \PHPUnit_Framework_MockObject_MockObject|StepInterface $firstStepMock */
@@ -44,14 +49,14 @@ class SimpleJobTest extends TestCase
             ->method('getName')
             ->willReturn('secondStep');
 
-        $simpleJob = new SimpleJob('', $this->jobRepositoryMock, [$firstStepMock, $secondStepMock]);
+        $simpleJob = new SimpleJob('', $this->eventManagerAdapterMock, $this->jobRepositoryMock, [$firstStepMock, $secondStepMock]);
 
         $this->assertEquals(['firstStep', 'secondStep'], $simpleJob->getStepNames());
     }
 
     public function testGetStep()
     {
-        $simpleJob = new SimpleJob('', $this->jobRepositoryMock);
+        $simpleJob = new SimpleJob('', $this->eventManagerAdapterMock, $this->jobRepositoryMock);
         $this->assertNull($simpleJob->getStep('absent'));
 
         /** @var \PHPUnit_Framework_MockObject_MockObject|StepInterface $firstStepMock */
@@ -61,16 +66,8 @@ class SimpleJobTest extends TestCase
             ->method('getName')
             ->willReturn('firstStep');
 
-        $simpleJob = new SimpleJob('', $this->jobRepositoryMock, [$firstStepMock]);
+        $simpleJob = new SimpleJob('', $this->eventManagerAdapterMock, $this->jobRepositoryMock, [$firstStepMock]);
 
         $this->assertSame($firstStepMock, $simpleJob->getStep('firstStep'));
     }
-
-    public function testExecute()
-    {
-
-    }
-
-
-
 }

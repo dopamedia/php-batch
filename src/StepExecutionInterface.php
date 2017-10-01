@@ -7,6 +7,7 @@
 namespace Dopamedia\PhpBatch;
 
 use Dopamedia\PhpBatch\Item\ExecutionContext;
+use Dopamedia\PhpBatch\Item\InvalidItemInterface;
 use Dopamedia\PhpBatch\Job\JobParameters;
 
 /**
@@ -21,7 +22,7 @@ interface StepExecutionInterface extends EntityInterface
     public function getStepName(): ?string;
 
     /**
-     * @param string $name
+     * @param string $stepName
      * @return StepExecutionInterface
      */
     public function setStepName(string $stepName): StepExecutionInterface;
@@ -156,4 +157,63 @@ interface StepExecutionInterface extends EntityInterface
      * @return StepExecutionInterface
      */
     public function addFailureException(\Throwable $throwable): StepExecutionInterface;
+
+    /**
+     * @return array|string[]
+     */
+    public function getErrors(): array;
+
+    /**
+     * @param string $message
+     * @return StepExecutionInterface
+     */
+    public function addError(string $message): StepExecutionInterface;
+
+    /**
+     * @param string $reason
+     * @param array $reasonParameters
+     * @param InvalidItemInterface $item
+     * @return StepExecutionInterface
+     */
+    public function addWarning(
+        string $reason,
+        array $reasonParameters,
+        InvalidItemInterface $item
+    ): StepExecutionInterface;
+
+    /**
+     * @return array|WarningInterface
+     */
+    public function getWarnings(): array;
+
+    /**
+     * @return array
+     */
+    public function getSummary(): array;
+
+    /**
+     * @param array $summary
+     * @return StepExecutionInterface
+     */
+    public function setSummary(array $summary): StepExecutionInterface;
+
+    /**
+     * @param string $key
+     * @return mixed
+     */
+    public function getSummaryInfo(string $key);
+
+    /**
+     * @param string $key
+     * @param mixed $info
+     * @return StepExecutionInterface
+     */
+    public function addSummaryInfo(string $key, $info): StepExecutionInterface;
+
+    /**
+     * @param string $key
+     * @param int $increment
+     * @return StepExecutionInterface
+     */
+    public function incrementSummaryInfo(string $key, int $increment = 1): StepExecutionInterface;
 }

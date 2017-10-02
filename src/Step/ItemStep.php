@@ -142,6 +142,12 @@ class ItemStep extends AbstractStep
         return [$this->reader, $this->processor, $this->writer];
     }
 
+    /**
+     * @param StepExecutionInterface $stepExecution
+     * @param $element
+     * @param InvalidItemException $e
+     * @return void
+     */
     protected function handleStepExecutionWarning(
         StepExecutionInterface $stepExecution,
         $element,

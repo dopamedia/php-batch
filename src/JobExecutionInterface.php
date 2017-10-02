@@ -61,7 +61,7 @@ interface JobExecutionInterface extends EntityInterface
 
     /**
      * @param StepExecutionInterface $stepExecution
-     * @return StepExecutionInterface
+     * @return JobExecutionInterface
      */
     public function addStepExecution(StepExecutionInterface $stepExecution): JobExecutionInterface;
 

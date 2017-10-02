@@ -182,7 +182,7 @@ interface StepExecutionInterface extends EntityInterface
     ): StepExecutionInterface;
 
     /**
-     * @return array|WarningInterface
+     * @return array|WarningInterface[]
      */
     public function getWarnings(): array;
 

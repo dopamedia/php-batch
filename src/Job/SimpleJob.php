@@ -84,7 +84,7 @@ class SimpleJob extends AbstractJob
             $stepExecution = $this->handleStep($step, $execution);
             $this->jobRepository->updateStepExecution($stepExecution);
 
-            if ($stepExecution->getStatus()->getValue() !== BatchStatus::COMPLETED) {
+            if ($stepExecution->getStatus()->equals(BatchStatus::COMPLETED()) === false) {
                 // Terminate the job if a step fails
                 break;
             }

@@ -154,8 +154,8 @@ abstract class AbstractJob implements JobInterface
         }
 
         if (
-            $stepExecution->getStatus()->getValue() === BatchStatus::STOPPING
-            || $stepExecution->getStatus()->getValue() === BatchStatus::STOPPED
+            $stepExecution->getStatus()->equals(BatchStatus::STOPPING())
+            || $stepExecution->getStatus()->equals(BatchStatus::STOPPED())
         ) {
             $this->updateStatus($execution, BatchStatus::STOPPING());
             $this->jobRepository->updateStepExecution($stepExecution);

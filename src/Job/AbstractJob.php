@@ -149,6 +149,7 @@ abstract class AbstractJob implements JobInterface
             $step->execute($stepExecution);
         } catch (JobInterruptedException $e) {
             $this->updateStatus($execution, BatchStatus::STOPPING());
+            $this->jobRepository->updateStepExecution($stepExecution);
             throw $e;
         }
 
@@ -157,6 +158,7 @@ abstract class AbstractJob implements JobInterface
             || $stepExecution->getStatus()->getValue() === BatchStatus::STOPPED
         ) {
             $this->updateStatus($execution, BatchStatus::STOPPING());
+            $this->jobRepository->updateStepExecution($stepExecution);
             throw new JobInterruptedException('Job interrupted by step execution');
         }
 

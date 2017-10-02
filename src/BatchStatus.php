@@ -85,7 +85,7 @@ class BatchStatus extends Enum
      */
     public function isGreaterThan(BatchStatus $other): bool
     {
-        return $other->getValue() < $this->value;
+        return $other->getValue() > $this->value;
     }
 
     /**
@@ -94,15 +94,20 @@ class BatchStatus extends Enum
      */
     public function upgradeTo(BatchStatus $other): BatchStatus
     {
-        if ($this->isGreaterThan(self::STARTED()) || $other->isGreaterThan(self::STARTED())) {
-            return self::max($this, $other);
+        if ($this->isGreaterThan(self::STARTED()) || $other->isLessThan(self::STARTED())) {
+            $newStatus = self::max($this, $other);
+        } else {
+            // Both less than or equal to STARTED
+            if ($this->equals(self::COMPLETED()) || $other->equals(self::COMPLETED())) {
+                $newStatus = self::COMPLETED();
+            } else {
+                $newStatus = self::max($this, $other);
+            }
         }
 
-        if ($this->value === self::COMPLETED || $other->getValue() === self::COMPLETED) {
-            return self::COMPLETED();
-        }
+        $this->value = $newStatus->getValue();
 
-        return self::max($this, $other);
+        return $this;
     }
 
     /**
@@ -121,7 +126,7 @@ class BatchStatus extends Enum
      */
     public function isLessThan(BatchStatus $other): bool
     {
-        return $other->getValue() > $this->value;
+        return $other->getValue() < $this->value;
     }
 
     /**
@@ -130,7 +135,7 @@ class BatchStatus extends Enum
      */
     public function isLessThanOrEqualTo(BatchStatus $other): bool
     {
-        return $other->getValue() >= $this->value;
+        return $other->getValue() <= $this->value;
     }
 
     /**

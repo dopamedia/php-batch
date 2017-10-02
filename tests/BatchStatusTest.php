@@ -34,12 +34,12 @@ class BatchStatusTest extends TestCase
         $batchStatus1 = BatchStatus::STARTING();
         $batchStatus2 = BatchStatus::FAILED();
 
-        $this->assertSame($batchStatus2, (new BatchStatus())::max($batchStatus1, $batchStatus2));
+        $this->assertSame($batchStatus1, (new BatchStatus())::max($batchStatus1, $batchStatus2));
 
         $batchStatus1 = BatchStatus::ABANDONED();
         $batchStatus2 = BatchStatus::COMPLETED();
 
-        $this->assertSame($batchStatus1, (new BatchStatus())::max($batchStatus1, $batchStatus2));
+        $this->assertSame($batchStatus2, (new BatchStatus())::max($batchStatus1, $batchStatus2));
     }
 
     public function testIsRunning()
@@ -51,15 +51,15 @@ class BatchStatusTest extends TestCase
 
     public function testIsUnsuccessful()
     {
-        $this->assertFalse(BatchStatus::COMPLETED()->isUnsuccessful());
+        $this->assertTrue(BatchStatus::COMPLETED()->isUnsuccessful());
         $this->assertTrue(BatchStatus::FAILED()->isUnsuccessful());
-        $this->assertTrue(BatchStatus::UNKNOWN()->isUnsuccessful());
+        $this->assertFalse(BatchStatus::UNKNOWN()->isUnsuccessful());
     }
 
     public function testUpgradeTo()
     {
         $this->assertEquals(
-            BatchStatus::FAILED,
+            BatchStatus::STARTED,
             BatchStatus::STARTED()->upgradeTo(BatchStatus::FAILED())->getValue()
         );
 
@@ -69,27 +69,27 @@ class BatchStatusTest extends TestCase
         );
 
         $this->assertEquals(
-            BatchStatus::STARTED,
+            BatchStatus::STARTING,
             BatchStatus::STARTING()->upgradeTo(BatchStatus::STARTED())->getValue()
         );
     }
 
     public function testIsGreaterThan()
     {
-        $this->assertFalse(BatchStatus::COMPLETED()->isGreaterThan(BatchStatus::UNKNOWN()));
-        $this->assertTrue(BatchStatus::FAILED()->isGreaterThan(BatchStatus::STARTING()));
+        $this->assertTrue(BatchStatus::COMPLETED()->isGreaterThan(BatchStatus::UNKNOWN()));
+        $this->assertFalse(BatchStatus::FAILED()->isGreaterThan(BatchStatus::STARTING()));
     }
 
     public function testIsLessThan()
     {
-        $this->assertFalse(BatchStatus::STARTING()->isLessThan(BatchStatus::COMPLETED()));
-        $this->assertTrue(BatchStatus::STOPPING()->isLessThan(BatchStatus::FAILED()));
+        $this->assertTrue(BatchStatus::STARTING()->isLessThan(BatchStatus::COMPLETED()));
+        $this->assertFalse(BatchStatus::STOPPING()->isLessThan(BatchStatus::FAILED()));
     }
 
     public function testIsLessThanOrEqualTo()
     {
-        $this->assertFalse(BatchStatus::STARTING()->isLessThanOrEqualTo(BatchStatus::COMPLETED()));
-        $this->assertTrue(BatchStatus::STOPPING()->isLessThanOrEqualTo(BatchStatus::FAILED()));
+        $this->assertTrue(BatchStatus::STARTING()->isLessThanOrEqualTo(BatchStatus::COMPLETED()));
+        $this->assertFalse(BatchStatus::STOPPING()->isLessThanOrEqualTo(BatchStatus::FAILED()));
         $this->assertTrue(BatchStatus::STOPPED()->isLessThanOrEqualTo(BatchStatus::STOPPED()));
     }
 

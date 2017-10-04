@@ -41,4 +41,18 @@ class ValidatorProviderResult
     {
         return $this->messages;
     }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        $validatorMessages = '';
+
+        foreach ($this->messages as $message) {
+            $validatorMessages .= sprintf("\n  - %s", $message);
+        }
+
+        return $validatorMessages;
+    }
 }

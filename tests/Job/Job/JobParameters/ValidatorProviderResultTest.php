@@ -42,4 +42,12 @@ class ValidatorProviderResultTest extends TestCase
         $this->assertEquals(['message'], $this->validatorProviderResult->getMessages());
     }
 
+    public function testToString()
+    {
+        $this->validatorProviderResult->addMessage('message1');
+        $this->validatorProviderResult->addMessage('message2');
+
+        $this->assertContains('message1', $this->validatorProviderResult->__toString());
+        $this->assertContains('message2', $this->validatorProviderResult->__toString());
+    }
 }

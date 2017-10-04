@@ -38,6 +38,7 @@ class JobParameters implements \IteratorAggregate, \Countable
     /**
      * @param string $key
      * @return mixed
+     * @throws UndefinedJobParameterException
      */
     public function get(string $key)
     {

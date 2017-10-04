@@ -6,24 +6,24 @@
 
 namespace Dopamedia\PhpBatch\Job\JobParameters;
 
+use Dopamedia\PhpBatch\Job\JobParameters;
 use Dopamedia\PhpBatch\JobInterface;
-use Symfony\Component\Validator\Constraints\Collection;
 
 /**
- * Interface ConstraintCollectionProviderInterface
+ * Interface ValidatorProviderInterface
  * @package Dopamedia\PhpBatch\Job\JobParameters
  */
-interface ConstraintCollectionProviderInterface
+interface ValidatorProviderInterface
 {
     /**
-     * @return Collection
+     * @param JobParameters $jobParameters
+     * @return array
      */
-    public function getConstraintCollection(): Collection;
+    public function validate(JobParameters $jobParameters): array;
 
     /**
      * @param JobInterface $job
      * @return bool
      */
     public function supports(JobInterface $job): bool;
-
 }

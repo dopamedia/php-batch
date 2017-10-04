@@ -6,14 +6,14 @@
 
 namespace Dopamedia\PhpBatch\Job\JobParameters;
 
+use Dopamedia\PhpBatch\Job\JobParameters;
 use Dopamedia\PhpBatch\JobInterface;
-use Symfony\Component\Validator\Constraints\Collection;
 
 /**
- * Class EmptyConstraintCollectionProvider
+ * Class EmptyValidatorProvider
  * @package Dopamedia\PhpBatch\Job\JobParameters
  */
-class EmptyConstraintCollectionProvider implements ConstraintCollectionProviderInterface
+class EmptyValidatorProvider implements ValidatorProviderInterface
 {
     /**
      * @var array
@@ -21,7 +21,7 @@ class EmptyConstraintCollectionProvider implements ConstraintCollectionProviderI
     private $supportedJobNames;
 
     /**
-     * EmptyConstraintCollectionProvider constructor.
+     * EmptyValidatorProvider constructor.
      * @param array $supportedJobNames
      */
     public function __construct(array $supportedJobNames)
@@ -32,9 +32,9 @@ class EmptyConstraintCollectionProvider implements ConstraintCollectionProviderI
     /**
      * @inheritDoc
      */
-    public function getConstraintCollection(): Collection
+    public function validate(JobParameters $jobParameters): array
     {
-        return new Collection(['fields' => []]);
+        return [];
     }
 
     /**

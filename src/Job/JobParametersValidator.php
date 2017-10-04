@@ -6,10 +6,8 @@
 
 namespace Dopamedia\PhpBatch\Job;
 
-use Dopamedia\PhpBatch\Job\JobParameters\ConstraintCollectionProviderRegistryInterface;
+use Dopamedia\PhpBatch\Job\JobParameters\ValidatorProviderRegistryInterface;
 use Dopamedia\PhpBatch\JobInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
  * Class JobParametersValidator
@@ -18,45 +16,28 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 class JobParametersValidator
 {
     /**
-     * @var ValidatorInterface
-     */
-    private $validator;
-
-    /**
-     * @var ConstraintCollectionProviderRegistryInterface
+     * @var ValidatorProviderRegistryInterface
      */
     private $registry;
 
     /**
      * JobParametersValidator constructor.
-     * @param ValidatorInterface $validator
-     * @param ConstraintCollectionProviderRegistryInterface $registry
+     * @param ValidatorProviderRegistryInterface $registry
      */
     public function __construct(
-        ValidatorInterface $validator,
-        ConstraintCollectionProviderRegistryInterface $registry
+        ValidatorProviderRegistryInterface $registry
     )
     {
-        $this->validator = $validator;
         $this->registry = $registry;
     }
 
     /**
      * @param JobInterface $job
      * @param JobParameters $jobParameters
-     * @param array $groups
-     * @return ConstraintViolationListInterface
+     * @return array
      */
-    public function validate(
-        JobInterface $job,
-        JobParameters $jobParameters,
-        array $groups = []
-    ): ConstraintViolationListInterface
+    public function validate(JobInterface $job, JobParameters $jobParameters): array
     {
-        $provider = $this->registry->get($job);
-        $collection = $provider->getConstraintCollection();
-        $parameters = $jobParameters->all();
-
-        return $this->validator->validate($parameters, $collection, $groups);
+        return $this->registry->get($job)->validate($jobParameters);
     }
 }

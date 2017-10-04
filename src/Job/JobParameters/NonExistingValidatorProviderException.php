@@ -7,9 +7,9 @@
 namespace Dopamedia\PhpBatch\Job\JobParameters;
 
 /**
- * Class NonExistingConstraintCollectionProviderException
+ * Class NonExistingValidatorProviderException
  * @package Dopamedia\PhpBatch\Job\JobParameters
  */
-class NonExistingConstraintCollectionProviderException extends \DomainException
+class NonExistingValidatorProviderException extends \DomainException
 {
 }

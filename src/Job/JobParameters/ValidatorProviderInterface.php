@@ -17,9 +17,9 @@ interface ValidatorProviderInterface
 {
     /**
      * @param JobParameters $jobParameters
-     * @return array
+     * @return ValidatorProviderResult
      */
-    public function validate(JobParameters $jobParameters): array;
+    public function validate(JobParameters $jobParameters): ValidatorProviderResult;
 
     /**
      * @param JobInterface $job

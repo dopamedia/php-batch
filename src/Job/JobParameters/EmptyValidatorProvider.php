@@ -32,9 +32,9 @@ class EmptyValidatorProvider implements ValidatorProviderInterface
     /**
      * @inheritDoc
      */
-    public function validate(JobParameters $jobParameters): array
+    public function validate(JobParameters $jobParameters): ValidatorProviderResult
     {
-        return [];
+        return new ValidatorProviderResult();
     }
 
     /**

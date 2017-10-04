@@ -32,6 +32,20 @@ class EmptyValidatorProviderTest extends TestCase
     public function testValidate()
     {
         $emptyValidatorProvider = new EmptyValidatorProvider([]);
-        $this->assertEquals([], $emptyValidatorProvider->validate($this->jobParametersMock));
+        $validatorResult = $emptyValidatorProvider->validate($this->jobParametersMock);
+        $this->assertFalse($validatorResult->hasMessages());
     }
+
+    public function testSupports()
+    {
+        $this->jobMock->expects($this->exactly(2))
+            ->method('getName')
+            ->will($this->onConsecutiveCalls('absent', 'jobName'));
+
+        $emptyValidatorProvider = new EmptyValidatorProvider(['jobName']);
+
+        $this->assertFalse($emptyValidatorProvider->supports($this->jobMock));
+        $this->assertTrue($emptyValidatorProvider->supports($this->jobMock));
+    }
+
 }

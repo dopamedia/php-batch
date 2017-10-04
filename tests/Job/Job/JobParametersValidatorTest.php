@@ -34,6 +34,11 @@ class JobParametersValidatorTest extends TestCase
     protected $jobParametersMock;
 
     /**
+     * @var \PHPUnit_Framework_MockObject_MockObject|JobParameters\ValidatorProviderResult
+     */
+    protected $validatorProviderResultMock;
+
+    /**
      * @var JobParametersValidator
      */
     protected $jobParametersValidator;
@@ -44,6 +49,7 @@ class JobParametersValidatorTest extends TestCase
         $this->validatorProviderMock = $this->createMock(JobParameters\ValidatorProviderInterface::class);
         $this->jobMock = $this->createMock(JobInterface::class);
         $this->jobParametersMock = $this->createMock(JobParameters::class);
+        $this->validatorProviderResultMock = $this->createMock(JobParameters\ValidatorProviderResult::class);
 
         $this->jobParametersValidator = new JobParametersValidator(
             $this->validatorProviderRegistryMock
@@ -59,13 +65,11 @@ class JobParametersValidatorTest extends TestCase
         $this->validatorProviderMock->expects($this->once())
             ->method('validate')
             ->with($this->jobParametersMock)
-            ->willReturn(['error']);
+            ->willReturn($this->validatorProviderResultMock);
 
-        $validationResult = $this->jobParametersValidator->validate(
+        $this->jobParametersValidator->validate(
             $this->jobMock,
             $this->jobParametersMock
         );
-
-        $this->assertEquals(['error'], $validationResult);
     }
 }

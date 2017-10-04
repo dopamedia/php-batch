@@ -7,6 +7,7 @@
 namespace Dopamedia\PhpBatch\Job;
 
 use Dopamedia\PhpBatch\Job\JobParameters\ValidatorProviderRegistryInterface;
+use Dopamedia\PhpBatch\Job\JobParameters\ValidatorProviderResult;
 use Dopamedia\PhpBatch\JobInterface;
 
 /**
@@ -34,9 +35,9 @@ class JobParametersValidator
     /**
      * @param JobInterface $job
      * @param JobParameters $jobParameters
-     * @return array
+     * @return ValidatorProviderResult
      */
-    public function validate(JobInterface $job, JobParameters $jobParameters): array
+    public function validate(JobInterface $job, JobParameters $jobParameters): ValidatorProviderResult
     {
         return $this->registry->get($job)->validate($jobParameters);
     }

@@ -6,8 +6,8 @@
 
 namespace Dopamedia\PhpBatch\Job;
 
+use Dopamedia\PhpBatch\Job\JobParameters\DefaultValuesProviderRegistryInterface;
 use Dopamedia\PhpBatch\JobInterface;
-use Magento\Framework\ObjectManagerInterface;
 
 /**
  * Class JobParametersFactory
@@ -16,17 +16,27 @@ use Magento\Framework\ObjectManagerInterface;
 class JobParametersFactory
 {
     /**
-     * @var ObjectManagerInterface
+     * @var DefaultValuesProviderRegistryInterface
      */
-    private $objectManager;
+    private $defaultValuesProviderRegistry;
+
+    /**
+     * @var string
+     */
+    private $jobParametersClass;
 
     /**
      * JobParametersFactory constructor.
-     * @param ObjectManagerInterface $objectManager
+     * @param DefaultValuesProviderRegistryInterface $defaultValuesProviderRegistry
+     * @param string $jobParametersClass
      */
-    public function __construct(ObjectManagerInterface $objectManager)
+    public function __construct(
+        DefaultValuesProviderRegistryInterface $defaultValuesProviderRegistry,
+        string $jobParametersClass = JobParameters::class
+    )
     {
-        $this->objectManager = $objectManager;
+        $this->defaultValuesProviderRegistry = $defaultValuesProviderRegistry;
+        $this->jobParametersClass = $jobParametersClass;
     }
 
     /**
@@ -36,6 +46,9 @@ class JobParametersFactory
      */
     public function create(JobInterface $job, array $parameters = []): JobParameters
     {
-        return $this->objectManager->create(JobParameters::class, ['parameters' => $parameters]);
+        $provider = $this->defaultValuesProviderRegistry->get($job);
+        $parameters = array_merge($provider->getDefaultValues(), $parameters);
+
+        return new $this->jobParametersClass($parameters);
     }
 }

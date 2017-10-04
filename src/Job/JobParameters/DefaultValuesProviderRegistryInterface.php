@@ -6,8 +6,18 @@
 
 namespace Dopamedia\PhpBatch\Job\JobParameters;
 
+use Dopamedia\PhpBatch\JobInterface;
 
-class DefaultValuesProviderRegistry
+/**
+ * Interface DefaultValuesProviderRegistryInterface
+ * @package Dopamedia\PhpBatch\Job\JobParameters
+ */
+interface DefaultValuesProviderRegistryInterface
 {
-
+    /**
+     * @param JobInterface $job
+     * @return DefaultValuesProviderInterface
+     * @throws NonExistingDefaultValuesProviderException
+     */
+    public function get(JobInterface $job): DefaultValuesProviderInterface;
 }

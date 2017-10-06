@@ -79,7 +79,7 @@ abstract class AbstractStep implements StepInterface
         $this->attachStepExecutionEvent(EventInterface::BEFORE_STEP_EXECUTION, $execution);
         $execution->setStartTime(new \DateTime());
         $execution->setStatus(BatchStatus::STARTED());
-        $this->jobRepository->updateStepExecution($execution);
+        $this->jobRepository->saveStepExecution($execution);
 
         // Start with a default value that will be trumped by anything
         $exitStatus = new ExitStatus(ExitStatus::EXECUTING);
@@ -88,7 +88,7 @@ abstract class AbstractStep implements StepInterface
             $this->doExecute($execution);
             $exitStatus = new ExitStatus(ExitStatus::COMPLETED);
             $exitStatus->logicalAnd($execution->getExitStatus());
-            $this->jobRepository->updateStepExecution($execution);
+            $this->jobRepository->saveStepExecution($execution);
 
             // Check if someone is trying to stop us
             if ($execution->isTerminateOnly()) {
@@ -102,7 +102,7 @@ abstract class AbstractStep implements StepInterface
             $execution->upgradeStatus($this->determineBatchStatus($t));
             $exitStatus = $exitStatus->logicalAnd($this->getDefaultExitStatusForFailure($t));
             $execution->addFailureException($t);
-            $this->jobRepository->updateStepExecution($execution);
+            $this->jobRepository->saveStepExecution($execution);
 
             if ($execution->getStatus()->getValue() === BatchStatus::STOPPED) {
                 $this->attachStepExecutionEvent(EventInterface::STEP_EXECUTION_INTERRUPTED, $execution);
@@ -115,7 +115,7 @@ abstract class AbstractStep implements StepInterface
 
         $execution->setEndTime(new \DateTime());
         $execution->setExitStatus($exitStatus);
-        $this->jobRepository->updateStepExecution($execution);
+        $this->jobRepository->saveStepExecution($execution);
     }
 
     /**

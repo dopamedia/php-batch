@@ -19,6 +19,13 @@ use Dopamedia\PhpBatch\WarningInterface;
 interface JobRepositoryInterface
 {
     /**
+     * @param int $id
+     * @return JobExecutionInterface
+     * @throws \Exception
+     */
+    public function getJobExecutionById(int $id): JobExecutionInterface;
+
+    /**
      * @param JobInstanceInterface $jobInstance
      * @param JobParameters $jobParameters
      * @return JobExecutionInterface
@@ -27,15 +34,52 @@ interface JobRepositoryInterface
 
     /**
      * @param JobExecutionInterface $jobExecution
-     * @return void
+     * @return JobExecutionInterface
+     * @throws \Exception
      */
-    public function updateJobExecution(JobExecutionInterface $jobExecution): void;
+    public function saveJobExecution(JobExecutionInterface $jobExecution): JobExecutionInterface;
+
+    /**
+     * @param int $id
+     * @return JobInstanceInterface
+     * @throws \Exception
+     */
+    public function getJobInstanceById(int $id): JobInstanceInterface;
+
+    /**
+     * @param string $code
+     * @return JobInstanceInterface
+     * @throws \Exception
+     */
+    public function getJobInstanceByCode(string $code): JobInstanceInterface;
+
+    /**
+     * @param JobInstanceInterface $jobInstance
+     * @return JobInstanceInterface
+     * @throws \Exception
+     */
+    public function saveJobInstance(JobInstanceInterface $jobInstance): JobInstanceInterface;
+
+    /**
+     * @param int $id
+     * @return StepExecutionInterface
+     * @throws \Exception
+     */
+    public function getStepExecutionById(int $id): StepExecutionInterface;
 
     /**
      * @param StepExecutionInterface $stepExecution
-     * @return void
+     * @return StepExecutionInterface
+     * @throws \Exception
      */
-    public function updateStepExecution(StepExecutionInterface $stepExecution): void;
+    public function saveStepExecution(StepExecutionInterface $stepExecution): StepExecutionInterface;
+
+    /**
+     * @param int $id
+     * @return WarningInterface
+     * @throws \Exception
+     */
+    public function getWarningById(int $id): WarningInterface;
 
     /**
      * @param StepExecutionInterface $stepExecution
@@ -50,4 +94,11 @@ interface JobRepositoryInterface
         array $reasonParameters = [],
         array $item = []
     ): WarningInterface;
+
+    /**
+     * @param WarningInterface $warning
+     * @return WarningInterface
+     * @throws \Exception
+     */
+    public function saveWarning(WarningInterface $warning): WarningInterface;
 }

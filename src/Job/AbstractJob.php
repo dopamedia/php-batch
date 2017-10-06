@@ -78,12 +78,12 @@ abstract class AbstractJob implements JobInterface
             if ($execution->getStatus()->getValue() !== BatchStatus::STOPPING) {
                 $execution->setStartTime(new \DateTime());
                 $this->updateStatus($execution, BatchStatus::STARTED());
-                $this->jobRepository->updateJobExecution($execution);
+                $this->jobRepository->saveJobExecution($execution);
                 $this->doExecute($execution);
             } else {
                 $execution->setStatus(BatchStatus::STOPPED());
                 $execution->setExitStatus(new ExitStatus(ExitStatus::COMPLETED));
-                $this->jobRepository->updateJobExecution($execution);
+                $this->jobRepository->saveJobExecution($execution);
                 $this->attachJobExecutionEvent(EventInterface::JOB_EXECUTION_STOPPED, $execution);
             }
 
@@ -94,22 +94,22 @@ abstract class AbstractJob implements JobInterface
                 $noopExitStatus = new ExitStatus(ExitStatus::NOOP);
                 $noopExitStatus->addExitDescription("All steps already completed or no steps configured for this job.");
                 $execution->setExitStatus($exitStatus->logicalAnd($noopExitStatus));
-                $this->jobRepository->updateJobExecution($execution);
+                $this->jobRepository->saveJobExecution($execution);
             }
 
             $this->attachJobExecutionEvent(EventInterface::AFTER_JOB_EXECUTION, $execution);
             $execution->setEndTime(new \DateTime());
-            $this->jobRepository->updateJobExecution($execution);
+            $this->jobRepository->saveJobExecution($execution);
         } catch (JobInterruptedException $e) {
             $execution->setExitStatus($this->getDefaultExitStatusForFailure($e));
             $execution->setStatus(BatchStatus::max(BatchStatus::STOPPED(), $e->getStatus()));
             $execution->addFailureException($e);
-            $this->jobRepository->updateJobExecution($execution);
+            $this->jobRepository->saveJobExecution($execution);
         } catch (\Throwable $t) {
             $execution->setExitStatus($this->getDefaultExitStatusForFailure($t));
             $execution->setStatus(BatchStatus::FAILED());
             $execution->addFailureException($t);
-            $this->jobRepository->updateJobExecution($execution);
+            $this->jobRepository->saveJobExecution($execution);
             $this->attachJobExecutionEvent(EventInterface::JOB_EXECUTION_FATAL_ERROR, $execution);
         }
     }
@@ -122,7 +122,7 @@ abstract class AbstractJob implements JobInterface
     private function updateStatus(JobExecutionInterface $execution, BatchStatus $status): void
     {
         $execution->setStatus($status);
-        $this->jobRepository->updateJobExecution($execution);
+        $this->jobRepository->saveJobExecution($execution);
     }
 
     /**
@@ -136,6 +136,7 @@ abstract class AbstractJob implements JobInterface
      * @param JobExecutionInterface $execution
      * @return StepExecutionInterface
      * @throws JobInterruptedException
+     * @throws \Exception
      */
     protected final function handleStep(StepInterface $step, JobExecutionInterface $execution): StepExecutionInterface
     {
@@ -149,7 +150,7 @@ abstract class AbstractJob implements JobInterface
             $step->execute($stepExecution);
         } catch (JobInterruptedException $e) {
             $this->updateStatus($execution, BatchStatus::STOPPING());
-            $this->jobRepository->updateStepExecution($stepExecution);
+            $this->jobRepository->saveStepExecution($stepExecution);
             throw $e;
         }
 
@@ -158,7 +159,7 @@ abstract class AbstractJob implements JobInterface
             || $stepExecution->getStatus()->equals(BatchStatus::STOPPED())
         ) {
             $this->updateStatus($execution, BatchStatus::STOPPING());
-            $this->jobRepository->updateStepExecution($stepExecution);
+            $this->jobRepository->saveStepExecution($stepExecution);
             throw new JobInterruptedException('Job interrupted by step execution');
         }
 

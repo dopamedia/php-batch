@@ -74,6 +74,7 @@ class SimpleJob extends AbstractJob
     /**
      * @param JobExecutionInterface $execution
      * @throws \Dopamedia\PhpBatch\JobInterruptedException
+     * @throws \Exception
      */
     protected function doExecute(JobExecutionInterface $execution): void
     {
@@ -82,7 +83,7 @@ class SimpleJob extends AbstractJob
         /** @var StepInterface $step */
         foreach ($this->steps as $step) {
             $stepExecution = $this->handleStep($step, $execution);
-            $this->jobRepository->updateStepExecution($stepExecution);
+            $this->jobRepository->saveStepExecution($stepExecution);
 
             if ($stepExecution->getStatus()->equals(BatchStatus::COMPLETED()) === false) {
                 // Terminate the job if a step fails
@@ -95,7 +96,7 @@ class SimpleJob extends AbstractJob
             $this->attachJobExecutionEvent(EventInterface::BEFORE_JOB_STATUS_UPGRADE, $execution);
             $execution->upgradeStatus($stepExecution->getStatus());
             $execution->setExitStatus($stepExecution->getExitStatus());
-            $this->jobRepository->updateJobExecution($execution);
+            $this->jobRepository->saveJobExecution($execution);
         }
     }
 }

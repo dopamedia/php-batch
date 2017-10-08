@@ -54,6 +54,11 @@ interface JobRepositoryInterface
     public function getJobInstanceByCode(string $code): JobInstanceInterface;
 
     /**
+     * @return array|JobInstanceInterface[]
+     */
+    public function getJobInstances(): array;
+
+    /**
      * @param JobInstanceInterface $jobInstance
      * @return JobInstanceInterface
      * @throws \Exception

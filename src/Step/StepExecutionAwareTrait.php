@@ -27,4 +27,12 @@ trait StepExecutionAwareTrait
     {
         $this->stepExecution = $stepExecution;
     }
+
+    /**
+     * @return StepExecutionInterface|null
+     */
+    public function getStepExecution(): ?StepExecutionInterface
+    {
+        return $this->stepExecution;
+    }
 }

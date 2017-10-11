@@ -23,7 +23,7 @@ class EmptyDefaultValuesProvider implements DefaultValuesProviderInterface
      * EmptyDefaultValuesProvider constructor.
      * @param array $supportedJobNames
      */
-    public function __construct(array $supportedJobNames)
+    public function __construct(array $supportedJobNames = [])
     {
         $this->supportedJobNames = $supportedJobNames;
     }

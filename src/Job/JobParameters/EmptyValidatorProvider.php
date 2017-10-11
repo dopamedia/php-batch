@@ -24,7 +24,7 @@ class EmptyValidatorProvider implements ValidatorProviderInterface
      * EmptyValidatorProvider constructor.
      * @param array $supportedJobNames
      */
-    public function __construct(array $supportedJobNames)
+    public function __construct(array $supportedJobNames = [])
     {
         $this->supportedJobNames = $supportedJobNames;
     }

@@ -64,7 +64,7 @@ class ItemStep extends AbstractStep
         ItemReaderInterface $reader,
         ItemProcessorInterface $processor,
         ItemWriterInterface $writer,
-        $batchSize = 100
+        int $batchSize = 100
     )
     {
         parent::__construct($name, $eventManagerAdapter, $jobRepository);
@@ -102,7 +102,8 @@ class ItemStep extends AbstractStep
             if ($processedItem !== null) {
                 $itemsToWrite[] = $processedItem;
                 $writeCount++;
-                if (($writeCount % $this->batchSize ) === 0 ) {
+
+                if ($this->batchSize !== 0 && ($writeCount % $this->batchSize ) === 0 ) {
                     $this->write($itemsToWrite);
                     $itemsToWrite = [];
                     $this->jobRepository->saveStepExecution($stepExecution);

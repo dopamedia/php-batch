@@ -16,6 +16,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\Output;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -26,7 +27,6 @@ class JobExecuteCommand extends Command
 {
     private const ARGUMENT_NAME_CODE = 'code';
     private const OPTION_NAME_CONFIG = 'config';
-    private const OPTION_NAME_VERBOSE = 'verbose';
 
     /**
      * @var JobRegistryInterface
@@ -93,7 +93,7 @@ class JobExecuteCommand extends Command
 
     /**
      * @param InputInterface $input
-     * @param OutputInterface $output
+     * @param OutputInterface|Output $output
      * @return int
      * @throws \Exception
      */
@@ -103,6 +103,7 @@ class JobExecuteCommand extends Command
         $jobInstance = $this->jobRepository->getJobInstanceByCode($code);
         $job = $this->jobRegistry->getJob($jobInstance->getJobName());
         $rawParameters = $jobInstance->getRawParameters();
+
         if ($config = $input->getOption(self::OPTION_NAME_CONFIG)) {
             $rawParameters = array_merge($rawParameters ?? [], $this->decodeConfiguration($config));
         }
@@ -130,7 +131,7 @@ class JobExecuteCommand extends Command
 
         $this->jobRepository->saveJobExecution($jobExecution);
 
-        $verbose = $input->getOption(self::OPTION_NAME_VERBOSE);
+        $verbose = $output->isVerbose();
 
         if ($jobExecution->getExitStatus()->getExitCode() === ExitStatus::COMPLETED) {
             $nbWarnings = 0;
@@ -166,7 +167,7 @@ class JobExecuteCommand extends Command
             }
         } else {
             $output->writeln('<error>An error occurred during the execution.</error>');
-            $output->writeln(sprintf('<error>ExitStatus: %s</error>', $jobExecution->getExitStatus()));
+            $output->writeln(sprintf('<error>ExitStatus: %s</error>', (string)$jobExecution->getExitStatus()));
             $this->writeExceptions($output, $jobExecution->getFailureExceptions(), $verbose);
             foreach ($jobExecution->getStepExecutions() as $stepExecution) {
                 $this->writeExceptions($output, $stepExecution->getFailureExceptions(), $verbose);
@@ -203,6 +204,7 @@ class JobExecuteCommand extends Command
     /**
      * @param string $data
      * @return array
+     * @codeCoverageIgnore
      */
     private function decodeConfiguration(string $data): array
     {

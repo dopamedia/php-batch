@@ -126,9 +126,11 @@ class ItemStep extends AbstractStep
     {
         $this->stepExecution = $stepExecution;
         foreach ($this->getStepElements() as $element) {
+
             if ($element instanceof StepExecutionAwareInterface) {
                 $element->setStepExecution($stepExecution);
             }
+
             if ($element instanceof InitializableInterface) {
                 $element->initialize();
             }

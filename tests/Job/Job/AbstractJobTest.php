@@ -154,7 +154,7 @@ class AbstractJobTest extends TestCase
 
         $dummyAbstractJob->execute($this->jobExecutionMock);
     }
-    
+
     public function testExecuteStoppingWithoutSteps()
     {
         $jobRepositoryMock = $this->jobRepositoryMock;

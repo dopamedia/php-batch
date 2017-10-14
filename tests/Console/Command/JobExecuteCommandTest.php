@@ -208,7 +208,8 @@ class JobExecuteCommandTest extends TestCase
                         'code' => 'code',
                         'class' => 'Some\Class',
                         'message' => 'message',
-                        'messageParameters' => ['parameter1', 'parameter2']
+                        'messageParameters' => ['parameter1', 'parameter2'],
+                        'trace' => 'the exception trace'
                     ]
                 ]
             );
@@ -219,6 +220,7 @@ class JobExecuteCommandTest extends TestCase
         $this->assertContains( 'An error occurred during the execution.', $command->getDisplay());
         $this->assertContains('ExitStatus: exitStatus string representation', $command->getDisplay());
         $this->assertContains('Error #code in class Some\\Class: message', $command->getDisplay());
+        $this->assertContains('the exception trace', $command->getDisplay());
     }
 
     public function testExecuteWithWarnings()

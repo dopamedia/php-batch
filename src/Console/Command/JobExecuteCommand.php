@@ -195,6 +195,7 @@ class JobExecuteCommand extends Command
                 ),
                 true
             );
+
             if ($verbose) {
                 $output->write(sprintf('<error>%s</error>', $exception['trace']), true);
             }

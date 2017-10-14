@@ -14,11 +14,6 @@ use Symfony\Component\Console\Helper\Table;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
-/**
- * Class JobInstanceListCommandTest
- * @package Dopamedia\Batch\Test\Unit\Console\Command
- * @group current
- */
 class JobInstanceListCommandTest extends TestCase
 {
     /**

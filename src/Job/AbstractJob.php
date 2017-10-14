@@ -55,8 +55,8 @@ abstract class AbstractJob implements JobInterface
     )
     {
         $this->name = $name;
-        $this->jobRepository = $jobRepository;
         $this->eventManagerAdapter = $eventManagerAdapter;
+        $this->jobRepository = $jobRepository;
     }
 
     /**
@@ -117,7 +117,7 @@ abstract class AbstractJob implements JobInterface
     /**
      * @param JobExecutionInterface $execution
      * @param BatchStatus $status
-     * @return void
+     * @throws \Exception
      */
     private function updateStatus(JobExecutionInterface $execution, BatchStatus $status): void
     {

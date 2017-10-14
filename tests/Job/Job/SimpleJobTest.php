@@ -6,8 +6,12 @@
 
 namespace Dopamedia\PhpBatch\Job;
 
+use Dopamedia\PhpBatch\Event\EventInterface;
+use Dopamedia\PhpBatch\Event\JobExecutionEvent;
+use Dopamedia\PhpBatch\JobExecutionInterface;
 use Dopamedia\PhpBatch\Repository\JobRepositoryInterface;
 use Dopamedia\PhpBatch\Adapter\EventManagerAdapterInterface;
+use Dopamedia\PhpBatch\StepExecutionInterface;
 use Dopamedia\PhpBatch\StepInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -70,4 +74,50 @@ class SimpleJobTest extends TestCase
 
         $this->assertSame($firstStepMock, $simpleJob->getStep('firstStep'));
     }
+
+    public function testDoExecuteWithoutStep()
+    {
+        $eventManagerAdapter = $this->eventManagerAdapterMock;
+        $jobRepositoryMock = $this->jobRepositoryMock;
+
+        /** @var \PHPUnit_Framework_MockObject_MockObject|StepInterface $stepMock */
+        $stepMock = $this->createMock(StepInterface::class);
+
+        /** @var \PHPUnit_Framework_MockObject_MockObject|JobExecutionInterface $jobExecutionMock */
+        $jobExecutionMock = $this->createMock(JobExecutionInterface::class);
+
+        /** @var \PHPUnit_Framework_MockObject_MockObject|StepExecutionInterface $stepExecutionMock */
+        $stepExecutionMock = $this->createMock(StepExecutionInterface::class);
+
+        $jobExecutionMock->expects($this->once())
+            ->method('createStepExecution')
+            ->willReturn($stepExecutionMock);
+
+        $jobRepositoryMock->expects($this->once())
+            ->method('saveStepExecution');
+
+        $eventManagerAdapter->expects($this->once())
+            ->method('attach')
+            ->with(EventInterface::BEFORE_JOB_STATUS_UPGRADE);
+
+        $jobExecutionMock->expects($this->once())
+            ->method('upgradeStatus');
+
+        $jobExecutionMock->expects($this->once())
+            ->method('setExitStatus');
+
+        $jobRepositoryMock->expects($this->once())
+            ->method('saveJobExecution')
+            ->with($jobExecutionMock);
+
+        $dummySimpleJob = new class('', $eventManagerAdapter, $jobRepositoryMock, [$stepMock]) extends SimpleJob {
+            public function execute(JobExecutionInterface $execution): void
+            {
+                $this->doExecute($execution);
+            }
+        };
+
+        $dummySimpleJob->execute($jobExecutionMock);
+    }
+
 }

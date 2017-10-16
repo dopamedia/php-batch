@@ -36,6 +36,15 @@ class JobParametersTest extends TestCase
         $this->assertEquals('value', $jobParameters->get('key'));
     }
 
+    public function testSet()
+    {
+        $jobParameters = new JobParameters(['key' => 'value']);
+
+        $jobParameters->set('key', 'other value');
+
+        $this->assertEquals('other value', $jobParameters->get('key'));
+    }
+
     public function testAll()
     {
         $jobParameters = new JobParameters(['first' => '', 'second' => '']);

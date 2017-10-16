@@ -50,6 +50,15 @@ class JobParameters implements \IteratorAggregate, \Countable
     }
 
     /**
+     * @param string $key
+     * @param $value
+     */
+    public function set(string $key, $value): void
+    {
+        $this->parameters[$key] = $value;
+    }
+
+    /**
      * @return array
      */
     public function all(): array
